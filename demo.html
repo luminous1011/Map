@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
     <script src="./dist/echart.js"></script>
-    <!-- <script src="./map/map.js"></script> -->
     <script src="./node_modules/jquery/dist/jquery.js"></script>
     <style>
       * {
@@ -36,7 +35,7 @@
         margin-left: -400px;
         display: none;
       }
-      .block {
+      #in.block {
         display: block;
       }
     </style>
@@ -44,49 +43,30 @@
   <body>
     <div id="main"></div>
     <div id="in"></div>
+    <script src="./province/provincelist.js"></script>
+    <script src="./mark.js"></script>
     <script>
-      const dataList = [
-        { name: "南海诸岛", value: 0 },
-        { name: "北京", value: 1 },
-        { name: "天津", value: 3 },
-        { name: "上海", value: 4 },
-        { name: "重庆", value: 1 },
-        { name: "河北", value: 1 },
-        { name: "河南", value: 1 },
-        { name: "云南", value: 1 },
-        { name: "辽宁", value: 1 },
-        { name: "黑龙江", value: 1 },
-        { name: "湖南", value: 1 },
-        { name: "安徽", value: 1 },
-        { name: "山东", value: 1 },
-        { name: "新疆", value: 1 },
-        { name: "江苏", value: 1 },
-        { name: "浙江", value: 1 },
-        { name: "江西", value: 1 },
-        { name: "湖北", value: 1 },
-        { name: "广西", value: 1 },
-        { name: "甘肃", value: 1 },
-        { name: "山西", value: 1 },
-        { name: "内蒙古", value: 1 },
-        { name: "陕西", value: 1 },
-        { name: "吉林", value: 1 },
-        { name: "福建", value: 1 },
-        { name: "贵州", value: 1 },
-        { name: "广东", value: 1 },
-        { name: "青海", value: 1 },
-        { name: "西藏", value: 1 },
-        { name: "四川", value: 1 },
-        { name: "宁夏", value: 1 },
-        { name: "海南", value: 1 },
-        { name: "台湾", value: 1 },
-        { name: "香港", value: 1 },
-        { name: "澳门", value: 1 },
+      const url =
+        "image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAC9ElEQVRYR+2WPUwTYRjH/8/1DgygaUATYoiUxEGDCV0YjAO9DsboIMZ2MUZxcXBiYQAHyyAkLsqgiYmJuLC0URlcuTYmLgxqRCWRoRoGg3zUQMtHPx7z3pWmH8ddeyWBwSe55e593+f3/p+vIxyw0QH7x+EGcI+zx8Xpl0Kl8z3kfcRDUrO8JVup9mGnd/P59q3NLz94AeDEykjjNav1lgq4x9M+F7MmDrh0gTCxfRetyoZl1F6nLuJFdgCzc6yvy5LSlRim+F6bLAFaH26HiOhBfQCkJoaVqDOAsZ1JAm7vAijLvyBT1lKBpOsY1qitoAAzj67ebww5Amgb2xHkfWJz50lAlqvL2fUkY2nFcMnAq9WRhgGnAEYg67PYykiDryaAm+/TvlQKVxeXeLA+38bu06cohJw8PaXSp/LzTDW9EUtHKS/9fgDkQxGb6lMqlDi0AE+O8rqvA4s9+6HAdzobAxCd6lMqqmHPtGat381Q1uoGYPyV/GF3TUm4uzinBeuvAkZM8odrq4ICwEwwCjL6gKnJTcbrTMpCKJ6W1Ei/MwWsAFo8IE8QyCTB8TCw9cfUB4NHXWrEWSfMaoEQwZgFBZObQGfuGbcWj1BBbjZA5p9VQBBwh9TwpCMFWAsMMuhx8WY6NwRengV+l82Xdh+oxQNeKPVFYJXUiLNhxFrAxyB9HOsmZO+4bHpT8Zm8IfD805JwENJdpL51No5ZC3oZ+FgAaM8nc/nt8wtETnDiK5D4VtgiqWHLCWY73kpKUQBkkoAIgYlVADA+S/6w16JE7P8JczOBOIg69UOOnICeAyLryyFEDrT7SkNg0wP0sFnRiW+54lI83gvquAJefFcBoJekSMKiBGVgwqWGLSeqLUBWC0wSSP8r2jXdmbsbnJjTX5G7W4+7rkyR2fWAqhQw7QVip6j/Fo/hbiNu2g3tSrAqANau9zOkN3ahMk1Kmx5QJUBZL6iBxK4EqwRwOJaZf0r+SD5Ge1PbJmENF3a09D/APzM9MDBOoIkUAAAAAElFTkSuQmCC";
+      const pic = [
+        {
+          name: "图片",
+          value: [114.246826171875, 30.58827267102698],
+          type: "pic",
+        },
+      ];
+      const shanghai = [
+        {
+          name: "上海",
+          value: [121.44532, 31.223505],
+          type: "上海",
+        },
       ];
       const myChart = echarts.init(document.getElementById("main"));
       $.get("map.json", function (geoJson) {
         echarts.registerMap("china", geoJson);
         const option = {
-          backgroundColor: "#333", //画布背景底色
+          backgroundColor: "#fff", //画布背景底色
           tooltip: {
             formatter: function (params, ticket, callback) {
               return params.name + "<br />" + "标记点" + "：" + params.geoIndex;
@@ -97,23 +77,23 @@
           },
           geo: {
             map: "china",
-            zoom: 1.36, //地图放大尺寸
-            left: "center",
-            top: "bottom",
+            zoom: 1.23, //地图放大尺寸
+            // left: "center",
+            // top: "bottom",
             label: {
               normal: {
-                show: true,
-                color: "#fff",
+                show: true, //正常状态下显示区块label
+                color: "#000",
               },
               emphasis: {
-                show: true,
+                show: true, //选中时显示区块label
                 color: "#fff",
               },
             },
             roam: false, //禁止平移放大
             itemStyle: {
               normal: {
-                borderColor: "rgba(0, 0, 0, 0.2)",
+                borderColor: "#fff",
               },
               emphasis: {
                 areaColor: "#F3B329", //鼠标选择区域颜色
@@ -126,7 +106,7 @@
             },
             regions: [
               {
-                name: "北京市", //区块名称
+                name: "北京", //区块名称
                 itemStyle: {
                   normal: {
                     areaColor: "#fbd8f3",
@@ -134,7 +114,7 @@
                 },
               },
               {
-                name: "湖北省", //区块名称
+                name: "湖北", //区块名称
                 itemStyle: {
                   normal: {
                     areaColor: "#f00",
@@ -145,7 +125,7 @@
                 },
               },
               {
-                name: "河南省", //区块名称
+                name: "河南", //区块名称
                 itemStyle: {
                   normal: {
                     areaColor: "#aaf",
@@ -156,17 +136,38 @@
                 },
               },
             ],
-            //   "left": 0,
-            //   "right": 0,
-            //   "top": 0,
-            //   "bottom": 0
           },
           series: [
             {
-              name: "信息量",
-              type: "map",
-              geoIndex: 0,
-              data: dataList,
+              name: "图片",
+              type: "scatter",
+              coordinateSystem: "geo",
+              data: pic,
+              symbol: url,
+              SymbolSize: 10000000000000000000000,
+              tooltip: {
+                position: "top",
+                hideDelay: 50000,
+              },
+              itemStyle: {
+                normal: {
+                  color: "#f00",
+                  borderWidth: 2,
+                  alwayShowContent: true,
+                },
+              },
+            },
+            {
+              name: "图片",
+              type: "scatter",
+              coordinateSystem: "geo",
+              data: shanghai,
+              symbol: url,
+              label: {
+                normal: {
+                  show: false,
+                },
+              },
             },
           ],
         };
@@ -174,57 +175,92 @@
       });
 
       myChart.on("click", function (params) {
-        $.get("530000.json", function (geoJson) {
-          const divIn = document.getElementById("in");
-          divIn.classList.add("block");
-          const inChart = echarts.init(divIn);
-          echarts.registerMap("上海", geoJson);
-          inChart.setOption({
-            backgroundColor: "#999",
-            visualMap: {
-              min: 0,
-              max: 500,
-              show: false,
-              splitNumber: 5,
-              inRange: {
-                color: ["#d94e5d", "#eac736", "#50a3ba"].reverse(),
+        //根据选的的区域动态搭配不同的mark点
+        const markList = mark.get(params.name);
+        const markData = [];
+        if (markList && markList.length > 0 && markList instanceof Array) {
+          markList.forEach((item) => {
+            const obj = {
+              type: "scatter",
+              coordinateSystem: "geo",
+              symbol: url,
+              symbolSize: () => {
+                return [20, 20];
               },
-              textStyle: {
-                color: "#fff",
+              tooltip: {
+                show: true,
+                position: "top",
               },
-            },
-            geo: {
-              map: "上海",
-              label: {
-                normal: {
-                  show: true,
-                  color: "#fff",
-                },
-                emphasis: {
-                  show: true,
-                  color: "#fff",
-                },
-              },
-              roam: false,
-              itemStyle: {
-                normal: {
-                  borderColor: "rgba(0, 0, 0, 0.2)",
-                  // areaColor:'#009966'
-                },
-                emphasis: {
-                  areaColor: "#F3B329", //鼠标选择区域颜色
-                  shadowOffsetX: 0,
-                  shadowOffsetY: 0,
-                  shadowBlur: 20,
-                  borderWidth: 0,
-                  shadowColor: "rgba(0, 0, 0, 0.5)",
-                },
-              },
-            },
-            series: [],
+            };
+            obj.data = item;
+            markData.push(obj);
           });
-        });
+        }
+        //如果选择区域是海南
+        //1.地图 room 放大
+        //2.可拖放平移
+        //3.中心点放在海南岛
+        let isHaiNan = false;
+        if (params.name === "海南") {
+          isHaiNan = true;
+        }
+        $.get(
+          `./province/${provinceList.get(params.name)}.json`,
+          function (geoJson) {
+            const divIn = document.getElementById("in");
+            divIn.classList.add("block");
+            const inChart = echarts.init(divIn);
+            echarts.registerMap(params.name, geoJson);
+            inChart.setOption({
+              backgroundColor: "#999",
+              tooltip: {
+                position: "top",
+                show: false,
+                formatter: function (params, ticket, callback) {
+                  return `<img src="https://www.assassina.cn/images/index/shutterstock_5.png" onclick="doPlay()"/><br/>${params.data.message}`;
+                }, //数据格式化
+              },
+              visualMap: {
+                show: false,
+              },
+              geo: {
+                map: params.name,
+                zoom: isHaiNan ? 8 : 1.23,
+                center: isHaiNan ? [110.431155,19.210252] : false,//红色娘子军纪念园
+                label: {
+                  normal: {
+                    show: true, //正常状态下显示区块label
+                    color: "#000",
+                  },
+                  emphasis: {
+                    show: true, //选中时显示区块label
+                    color: "#fff",
+                  },
+                },
+                roam: isHaiNan,
+                itemStyle: {
+                  normal: {
+                    borderColor: "rgba(0, 0, 0, 0.2)",
+                    areaColor: "#aaf",
+                  },
+                  emphasis: {
+                    areaColor: "#F3B329", //鼠标选择区域颜色
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 0,
+                    shadowBlur: 20,
+                    borderWidth: 0,
+                    shadowColor: "rgba(0, 0, 0, 0.5)",
+                  },
+                },
+              },
+              series: markData,
+            });
+          }
+        );
       });
+      function doPlay() {
+        console.log(1);
+      }
     </script>
   </body>
 </html>
